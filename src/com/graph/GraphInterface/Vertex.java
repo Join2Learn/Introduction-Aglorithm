@@ -1,33 +1,48 @@
 package com.graph.GraphInterface;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by HoangVT on 12/22/17.
  */
 public class Vertex {
-    private int Vetext_id;
-    //
-    private int weight;
+    private int vetexId;
+    private int weight = 1;
+    private int prevVertexId = -1;
+    private int f = -1;
+    private int d = -1;
+    private List<Integer[]> adjustedVertexList = new ArrayList<Integer[]>();
+
+
+
+    public int getPrevVertexId() {
+        return prevVertexId;
+    }
+
+    public void setPrevVertexId(int prevVertexId) {
+        this.prevVertexId = prevVertexId;
+    }
+
+
     public Vertex(int vetext_id)
     {
-        this.Vetext_id = vetext_id;
+        this.setVertex_id(vetext_id);
     }
     public Vertex(int vetext_id,int weight)
     {
-        this.Vetext_id = vetext_id;
-        this.weight = weight;
+        this.setVertex_id(vetext_id);
+        this.setWeight(weight);
     }
 
-    private Map<Integer,Integer> adjustVertextst;
 
-    public int getVetext_id() {
-        return Vetext_id;
+
+    public int getVetexId() {
+        return vetexId;
     }
 
-    public void setVetext_id(int vetext_id) {
-        Vetext_id = vetext_id;
+    public void setVertex_id(int vetext_id) {
+        vetexId = vetext_id;
     }
 
 
@@ -39,4 +54,27 @@ public class Vertex {
         this.weight = weight;
     }
 
+    public int getF() {
+        return f;
+    }
+
+    public void setF(int f) {
+        this.f = f;
+    }
+
+    public int getD() {
+        return d;
+    }
+
+    public void setD(int d) {
+        this.d = d;
+    }
+
+    public List<Integer[]> getAdjustedVertexList() {
+        return adjustedVertexList;
+    }
+
+    public void setAdjustedVertexList(List<Integer[]> adjustedVertexList) {
+        this.adjustedVertexList = adjustedVertexList;
+    }
 }

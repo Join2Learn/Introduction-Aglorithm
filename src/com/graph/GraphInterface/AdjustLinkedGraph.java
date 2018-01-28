@@ -2,8 +2,6 @@ package com.graph.GraphInterface;
 
 import com.basicDataStructure.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -12,85 +10,78 @@ import java.util.List;
  */
 public class AdjustLinkedGraph extends Graph
 {
-    private List<Vertex>[] AdjustedVertextLists;
+    private Vertex[] vertextSet;
     private int graphSize = 0;
-    private int MarkVertext[];
+    private int vertexMarked[];
     private  static final int WHITE = 0;
     private  static final int GRAY = 1;
     private static final int  BLACK = 2;
     private Queue<Integer> m_Queue = null;
     private Stack<Integer> m_Stack = null;
+    private int            time = 0;
     public  AdjustLinkedGraph(int graphSize)
     {
         this.graphSize = graphSize;
-        AdjustedVertextLists = new List[graphSize];
-        MarkVertext = new int[graphSize];
+        vertextSet = new Vertex[graphSize];
+        vertexMarked = new int[graphSize];
         m_Queue     = new Queue<Integer>();
         m_Stack     = new Stack<Integer>();
         for (int i= 0; i<graphSize;i++)
         {
-            AdjustedVertextLists[i] = new ArrayList<>();
-            MarkVertext[i] = WHITE;
+            vertextSet[i] = new Vertex(i);
+            vertexMarked[i] = WHITE;
         }
 
     }
-    public void initilization()
-    {
-        for (int i= 0; i<graphSize;i++)
-        {
-            AdjustedVertextLists[i] = new ArrayList<>();
-            MarkVertext[i] = WHITE;
-        }
 
-    }
-    public   void inputGraph(int fromVetext,int toVertex, int weight)
+    public   void inputGraph(int fromVetex,int toVertex, int weight)
     {
-        if (fromVetext == toVertex) return;
-        Vertex newVetex = new Vertex(toVertex,weight);
-        AdjustedVertextLists[fromVetext].add(newVetex);
+        if (fromVetex == toVertex) return;
+        Integer[] adjustedVertex = {toVertex,weight};
+        vertextSet[fromVetex].getAdjustedVertexList().add(adjustedVertex);
     }
 
 
     public  void BFS(int StartVertex_ID)
     {
-        MarkVertext[StartVertex_ID] = GRAY;
+        vertexMarked[StartVertex_ID] = GRAY;
         m_Queue.push(StartVertex_ID);
         while (!m_Queue.isEmpty())
         {
             Integer VertextId = m_Queue.pop();
-            List<Vertex>  adjustedLinkedList = AdjustedVertextLists[VertextId];
+            List<Integer[]>  adjustedLinkedList = vertextSet[VertextId].getAdjustedVertexList();
             int adjustedVertextNumber = adjustedLinkedList.size();
             for(int i=0;i<adjustedVertextNumber;i++)
             {
-                int currentVertextId = adjustedLinkedList.get(i).getVetext_id();
-                if (MarkVertext[currentVertextId] == WHITE)
+                int currentVertextId = adjustedLinkedList.get(i)[0];
+                if (vertexMarked[currentVertextId] == WHITE)
                 {
-                    MarkVertext[currentVertextId] = GRAY;
+                    vertexMarked[currentVertextId] = GRAY;
                     m_Queue.push(currentVertextId);
                 }
             }
-            MarkVertext[VertextId] = BLACK;
+            vertexMarked[VertextId] = BLACK;
             System.out.println("Vertext:"+VertextId+" is Visisted");
         }
     }
     public  void DFS(int StartVertextId)
     {
-        int currentVertextId = 0;
-        MarkVertext[StartVertextId]= GRAY;
+        int currentVertexId = 0;
+        vertexMarked[StartVertextId]= GRAY;
         m_Stack.push(StartVertextId);
         while (!m_Stack.isEmpty())
         {
-            currentVertextId = m_Stack.getHeadStack();
-            List<Vertex> adjusVertextList = AdjustedVertextLists[currentVertextId];
-            int adjustedVertextListSize = adjusVertextList.size();
+            currentVertexId = m_Stack.getHeadStack();
+            List<Integer[]> adjustVertextList = vertextSet[currentVertexId].getAdjustedVertexList();
+            int adjustedVertextListSize = adjustVertextList.size();
 
-            for (Vertex vt:adjusVertextList) {
+            for (Integer[] vt:adjustVertextList) {
 
-                if (MarkVertext[vt.getVetext_id()] == WHITE)
+                if (vertexMarked[vt[0]] == WHITE)
                 {
-                    MarkVertext[vt.getVetext_id()] = GRAY;
-                    m_Stack.push(vt.getVetext_id());
-                    currentVertextId = vt.getVetext_id();
+                    vertexMarked[vt[0]] = GRAY;
+                    m_Stack.push(vt[0]);
+                    currentVertexId = vt[0];
                     break;
                 }
                 else
@@ -100,8 +91,8 @@ public class AdjustLinkedGraph extends Graph
             }
             if (adjustedVertextListSize == 0)
             {
-                MarkVertext[currentVertextId] = BLACK;
-                System.out.println("Vertext:"+currentVertextId+" is Visisted");
+                vertexMarked[currentVertexId] = BLACK;
+                System.out.println("Vertext:"+currentVertexId+" is Visisted");
                 m_Stack.pop();
 
             }
@@ -110,17 +101,19 @@ public class AdjustLinkedGraph extends Graph
 
     public  void RecursiveDFS(int s)
     {
-        MarkVertext[s] = GRAY;
-        List<Vertex> AdjustVertextList = AdjustedVertextLists[s];
-        for(Vertex vt: AdjustVertextList) {
-            if( MarkVertext[vt.getVetext_id()] == WHITE)
+        vertexMarked[s] = GRAY;
+        time = time + 1;
+        
+        List<Integer[]> adjustVertextList = vertextSet[s].getAdjustedVertexList();
+        for(Integer[] vt: adjustVertextList) {
+            if( vertexMarked[vt[0]] == WHITE)
             {
-                MarkVertext[vt.getVetext_id()]= GRAY;
-                RecursiveDFS(vt.getVetext_id());
+                vertexMarked[vt[0]]= GRAY;
+                RecursiveDFS(vt[0]);
             }
 
         }
-        MarkVertext[s] = BLACK;
+        vertexMarked[s] = BLACK;
         System.out.println("Vertext:"+s+" is Visisted");
 
 

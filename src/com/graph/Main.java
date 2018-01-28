@@ -54,7 +54,7 @@ public class Main {
         graph.inputGraph(6,7,1);
         graph.inputGraph(7,3,1);
         graph.inputGraph(7,6,1);
-        
+
         graph.RecursiveDFS(7);
     }
 }
